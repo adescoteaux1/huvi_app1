@@ -51,23 +51,14 @@ class AnalyticsTabContainerPageState extends State<AnalyticsTabContainerPage>
                         width: 395.h,
                         child: Stack(alignment: Alignment.center, children: [
                           _buildStatisticsSection(context),
-                          Align(
-                              alignment: Alignment.center,
-                              child: SizedBox(
-                                  height: 602.v,
-                                  width: 395.h,
-                                  child: Stack(
-                                      alignment: Alignment.topCenter,
-                                      children: [
+                           
+                          Container(child: Stack(alignment: Alignment.center, children: [_buildActivitySection(context),
+                            Container( child:_buildPlaylist(context),
+                            margin: EdgeInsets.only(left: 15.h, right: 15.h, bottom: 200.v),
+
                                         
-                                        _buildActivitySection(context),
-                                        Container(child: _buildPlaylist(context),
-                                        padding: EdgeInsets.only(top: 50.h),
                                         decoration: AppDecoration.outlineOnSecondaryContainer
-                .copyWith(borderRadius: BorderRadiusStyle.roundedBorder24, color: Colors.white,),
-                                        )
-                                        
-                                      ])))
+                .copyWith(borderRadius: BorderRadiusStyle.roundedBorder24, color: Colors.white,),)]))
                         ])))),
                         bottomNavigationBar: CustomBottomBar()));
   }
@@ -107,7 +98,7 @@ class AnalyticsTabContainerPageState extends State<AnalyticsTabContainerPage>
     return Align(
         alignment: Alignment.bottomCenter,
         child: Container(
-            margin: EdgeInsets.only(left: 22.h, right: 19.h, bottom: 14.v),
+            margin: EdgeInsets.only(left: 22.h, right: 19.h, bottom: 2.v),
             decoration: AppDecoration.fillYellow,
             child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -199,13 +190,13 @@ class AnalyticsTabContainerPageState extends State<AnalyticsTabContainerPage>
                                           Text("   Statistics",
                                               style: CustomTextStyles
                                                   .bodySmallGray600),
-                                          SizedBox(height: 8.v),
+                                          SizedBox(height: 5.v),
                                           Align(
                                               alignment: Alignment.center,
                                               child: Text("    Sun Time Today",
                                                   style: CustomTextStyles
                                                       .bodyLargeGray900)),
-                                          SizedBox(height: 12.v),
+                                          SizedBox(height: 2.v),
                                           Align(
                                               alignment: Alignment.center,
                                               child: RichText(
@@ -272,7 +263,7 @@ class AnalyticsTabContainerPageState extends State<AnalyticsTabContainerPage>
     return Align(
         alignment: Alignment.topCenter,
         child: Container(
-            margin: EdgeInsets.only(left: 15.h, right: 15.h, bottom: 553.v),
+            margin: EdgeInsets.only(left: 15.h, right: 10.h, bottom: 553.v),
             decoration: AppDecoration.outlineOnSecondaryContainer
                 .copyWith(borderRadius: BorderRadiusStyle.roundedBorder24, color: Colors.white,),
             child: Row(
@@ -280,7 +271,7 @@ class AnalyticsTabContainerPageState extends State<AnalyticsTabContainerPage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                      padding: EdgeInsets.only(top: 4.v, left: 5.h),
+                      padding: EdgeInsets.only(top: 4.v, left: 10.h),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -291,8 +282,8 @@ class AnalyticsTabContainerPageState extends State<AnalyticsTabContainerPage>
                           ])),
                   Container(
                       height: 34.v,
-                      width: 250.h,
-                      margin: EdgeInsets.only(bottom: 15.v),
+                      width: 240.h,
+                      margin: EdgeInsets.only(bottom: 15.v, right: 2.h),
                       decoration: BoxDecoration(
                           color: appTheme.gray10001,
                           borderRadius: BorderRadius.circular(17.h)),
@@ -323,11 +314,12 @@ class AnalyticsTabContainerPageState extends State<AnalyticsTabContainerPage>
 
   Widget _buildPlaylist(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(left: 18.h),
+      padding: EdgeInsets.only(left: 18.h, bottom: 20.v),
       
       child: Column(
-        
+        mainAxisSize: MainAxisSize.min,
         children: [
+          
           Divider(
             color: theme.colorScheme.onError,
             indent: 4.h,
@@ -341,11 +333,10 @@ class AnalyticsTabContainerPageState extends State<AnalyticsTabContainerPage>
               child: Stack(
                 alignment: Alignment.centerRight,
                 children: [
+                  
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
                           "6hr",
@@ -389,7 +380,7 @@ class AnalyticsTabContainerPageState extends State<AnalyticsTabContainerPage>
                     child: Container(
                       width: 327.h,
                       margin: EdgeInsets.only(
-                        left: 20.h,
+                        left: 10.h,
                         top: 6.v,
                       ),
                       padding: EdgeInsets.symmetric(horizontal: 7.h),
@@ -412,14 +403,14 @@ class AnalyticsTabContainerPageState extends State<AnalyticsTabContainerPage>
                             imagePath: ImageConstant.imgBar12,
                             height: 171.v,
                             width: 21.h,
-                            margin: EdgeInsets.only(top: 51.v),
+                            margin: EdgeInsets.only(top: 51.v, left: 20.h),
                           ),
                           CustomImageView(
                             imagePath: ImageConstant.imgBar12,
                             height: 63.v,
                             width: 21.h,
                             margin: EdgeInsets.only(
-                              left: 28.h,
+                              left: 15.h,
                               top: 160.v,
                             ),
                           ),
@@ -428,7 +419,7 @@ class AnalyticsTabContainerPageState extends State<AnalyticsTabContainerPage>
                             height: 31.v,
                             width: 21.h,
                             margin: EdgeInsets.only(
-                              left: 29.h,
+                              left: 22.h,
                               top: 192.v,
                             ),
                           ),
@@ -439,7 +430,7 @@ class AnalyticsTabContainerPageState extends State<AnalyticsTabContainerPage>
                             imagePath: ImageConstant.imgBar12,
                             height: 182.v,
                             width: 21.h,
-                            margin: EdgeInsets.only(top: 41.v),
+                            margin: EdgeInsets.only(top: 41.v, right: 25.h),
                           ),
                         ],
                       ),
@@ -450,21 +441,21 @@ class AnalyticsTabContainerPageState extends State<AnalyticsTabContainerPage>
                     height: 210.v,
                     width: 21.h,
                     alignment: Alignment.bottomRight,
-                    margin: EdgeInsets.only(right: 94.h),
+                    margin: EdgeInsets.only(right: 108.h),
                   ),
                   CustomImageView(
                     imagePath: ImageConstant.imgBar12,
                     height: 101.v,
                     width: 21.h,
                     alignment: Alignment.bottomRight,
-                    margin: EdgeInsets.only(right: 52.h),
+                    margin: EdgeInsets.only(right: 70.h),
                   ),
                   CustomImageView(
                     imagePath: ImageConstant.imgBar12,
                     height: 132.v,
                     width: 21.h,
                     alignment: Alignment.bottomLeft,
-                    margin: EdgeInsets.only(left: 39.h),
+                    margin: EdgeInsets.only(left: 42.h),
                   ),
                 ],
               ),
