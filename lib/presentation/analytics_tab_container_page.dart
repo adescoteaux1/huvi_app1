@@ -89,7 +89,7 @@ class AnalyticsTabContainerPageState extends State<AnalyticsTabContainerPage>
               onTapArrowLeft(context);
             }),
         centerTitle: true,
-        title: AppbarTitle(text: "Analytics"));
+        title: AppbarTitle(text: "Analytics", fontSize: 30,));
   }
 
   /// Section Widget

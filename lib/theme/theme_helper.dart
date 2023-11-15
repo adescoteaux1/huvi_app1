@@ -152,6 +152,7 @@ class TextThemes {
           fontSize: 22.fSize,
           fontFamily: 'Inter',
           fontWeight: FontWeight.w600,
+        
         ),
         titleMedium: TextStyle(
           color: appTheme.yellow900,

@@ -93,13 +93,13 @@ class _UvStatusVonePageState extends State<UvStatusVonePage> {
                                 Padding(
                                     padding:
                                         EdgeInsets.only(left: 11.h, top: 10.v),
-                                    child: Text('${_weather?.temperature.round()} °C',
+                                    child: Text('47°F',//'${_weather?.temperature.round()} °C',
                                         style: CustomTextStyles
                                             .headlineLargeBlack90001)),
                                     Padding(
                                     padding:
                                         EdgeInsets.only(left: 11.h, top: 10.v),
-                                    child: Text('${_weather?.mainCondition}',
+                                    child: Text('Cloudy',//'${_weather?.mainCondition}',
                                         style: CustomTextStyles
                                             .headlineLargeBlack90001))
                               ])),
@@ -198,7 +198,7 @@ class _UvStatusVonePageState extends State<UvStatusVonePage> {
                                       margin: EdgeInsets.only(left: 5.h),
                                       child: //LocationWidget(),
                                           Text(
-                                        '${_weather?.cityName ?? 'loading...'}',
+                                        'Boston',//'${_weather?.cityName ?? 'loading...'}',
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(fontSize: 24),

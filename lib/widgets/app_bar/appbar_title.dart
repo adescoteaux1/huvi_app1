@@ -8,6 +8,7 @@ class AppbarTitle extends StatelessWidget {
     required this.text,
     this.margin,
     this.onTap,
+    this.fontSize
   }) : super(
           key: key,
         );
@@ -17,6 +18,7 @@ class AppbarTitle extends StatelessWidget {
   EdgeInsetsGeometry? margin;
 
   Function? onTap;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +32,11 @@ class AppbarTitle extends StatelessWidget {
           text,
           style: CustomTextStyles.titleMediumSemiBold.copyWith(
             color: appTheme.yellow900,
-          ),
+
+            fontSize: fontSize,
+          )
         ),
+        
       ),
     );
   }
