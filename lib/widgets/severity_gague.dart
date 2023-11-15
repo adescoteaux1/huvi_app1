@@ -20,16 +20,16 @@ class SeverityGauge extends StatelessWidget {
         ),
         SizedBox(height: 8.0),
         Container(
-          width: 200.0,
+          width: 400.0,
           height: 20.0,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10.0),
+            borderRadius: BorderRadius.circular(20.0),
             color: Colors.grey[300],
           ),
           child: Stack(
             children: [
               Container(
-                width: 200.0 * severity,
+                width: 400.0 * severity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
                   gradient: LinearGradient(
@@ -48,17 +48,16 @@ class SeverityGauge extends StatelessWidget {
                   Container(
                     width: 4.0,
                     height: 20.0,
-                    color: Colors.black,
+                    color: Color.fromRGBO(241, 241, 249, 1),
                   ),
                   Container(
                     width: 4.0,
                     height: 20.0,
-                    color: Colors.black,
                   ),
                   Container(
                     width: 4.0,
                     height: 20.0,
-                    color: Colors.black,
+                    color: Color.fromRGBO(241, 241, 249, 1),
                   ),
                 ],
               ),

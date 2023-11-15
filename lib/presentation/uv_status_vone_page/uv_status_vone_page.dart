@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:huvi_app1/core/app_export.dart';
 import 'package:huvi_app1/core/models/weather_models.dart';
 import 'package:huvi_app1/presentation/recommendation_vone_screen/recommendation_vone_screen.dart';
@@ -8,6 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:huvi_app1/widgets/location.dart';
 import 'package:huvi_app1/widgets/severity_gague.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:lottie/lottie.dart';
+
 
 import '../../core/services/weather_service.dart';
 
@@ -21,6 +26,12 @@ class UvStatusVonePage extends StatefulWidget {
 class _UvStatusVonePageState extends State<UvStatusVonePage> {
   final _weatherService = WeatherService('2cab5c5e69ebafa5c4a0557e156831a2');
   Weather? _weather;
+
+  Future<void> loadJsonAsset() async { 
+  final String jsonString = await rootBundle.loadString('assets/cloud.json'); 
+  final data = jsonDecode(jsonString); 
+  print(data); 
+}
 
   _fetchWeather() async {
     //gett current city
@@ -42,6 +53,7 @@ class _UvStatusVonePageState extends State<UvStatusVonePage> {
     super.initState();
 
     _fetchWeather();
+    loadJsonAsset();
   }
 
   @override
@@ -52,7 +64,7 @@ class _UvStatusVonePageState extends State<UvStatusVonePage> {
             backgroundColor: appTheme.gray50,
             body: SingleChildScrollView(
               child: Container(
-                width: 395.h,
+                width: 410.h,
                 decoration: AppDecoration.fillGray50,
                 child: Container(
                     padding:
@@ -71,10 +83,13 @@ class _UvStatusVonePageState extends State<UvStatusVonePage> {
                           Padding(
                               padding: EdgeInsets.only(left: 61.h, top: 5.v),
                               child: Row(children: [
-                                CustomImageView(
+                                /*CustomImageView(
                                     svgPath: ImageConstant.imgSun,
                                     height: 49.adaptSize,
-                                    width: 49.adaptSize),
+                                    width: 49.adaptSize),*/
+                                Container(child: Lottie.asset('assets/cloud.json'),
+                                height: 75.v,)
+                                ,
                                 Padding(
                                     padding:
                                         EdgeInsets.only(left: 11.h, top: 10.v),
@@ -93,7 +108,7 @@ class _UvStatusVonePageState extends State<UvStatusVonePage> {
                               alignment: Alignment.center,
                               child: Container(
                                   margin: EdgeInsets.only(
-                                      left: 50.h, top: 9.v, right: 50.h),
+                                      left: 40.h, top: 9.v, right: 40.h),
                                   padding: EdgeInsets.symmetric(
                                       horizontal: 40.h, vertical: 50.v),
                                   decoration: BoxDecoration(
@@ -105,7 +120,7 @@ class _UvStatusVonePageState extends State<UvStatusVonePage> {
                                       margin: EdgeInsets.only(
                                           left: 1.h, bottom: 7.v),
                                       padding: EdgeInsets.symmetric(
-                                          horizontal: 47.h, vertical: 20.v),
+                                          horizontal: 44.h, vertical: 15.v),
                                       decoration: AppDecoration.gradientYellowToYellow.copyWith(
                                           borderRadius: BorderRadiusStyle
                                               .roundedBorder74),
@@ -133,7 +148,10 @@ class _UvStatusVonePageState extends State<UvStatusVonePage> {
                                             child: Text("UV LEVEL",
                                                 style: CustomTextStyles
                                                     .headlineLargeYellow900))),
-                                    SeverityGauge(severity: 0.7),
+                                    Padding(
+                                            padding:
+                                                EdgeInsets.only(top: 15.v),
+                                            child: SeverityGauge(severity: 0.7)),
                                   ])),
                           Padding(
                               padding: EdgeInsets.only(
@@ -161,7 +179,7 @@ class _UvStatusVonePageState extends State<UvStatusVonePage> {
                                                     .copyWith(height: 1.44))))
                                   ])),
                           Padding(
-                              padding: EdgeInsets.only(left: 51.h, top: 17.v),
+                              padding: EdgeInsets.only(left: 75.h, top: 17.v),
                               child: Row(children: [
                                 CustomImageView(
                                     svgPath: ImageConstant.imgLocationmarker,
@@ -171,12 +189,12 @@ class _UvStatusVonePageState extends State<UvStatusVonePage> {
                                         top: 20.v, bottom: 27.v)),
                                 Column(children: [
                                   Container(
-                                    width: 164.h,
+                                    width: 195.h,
                                     margin: EdgeInsets.only(left: 5.h),
                                     child: ClockWidget(),
                                   ),
                                   Container(
-                                      width: 245.h,
+                                      width: 164.h,
                                       margin: EdgeInsets.only(left: 5.h),
                                       child: //LocationWidget(),
                                           Text(

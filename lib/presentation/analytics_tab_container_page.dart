@@ -52,8 +52,7 @@ class AnalyticsTabContainerPageState extends State<AnalyticsTabContainerPage>
                         child: Stack(alignment: Alignment.center, children: [
                           _buildStatisticsSection(context),
                            
-                          Container(child: Stack(alignment: Alignment.center, children: [_buildActivitySection(context),
-                            Container( child:_buildPlaylist(context),
+                          Container(child: Stack(alignment: Alignment.center, children: [Container( child:_buildPlaylist(context),
                             margin: EdgeInsets.only(left: 15.h, right: 15.h, bottom: 200.v),
 
                                         
@@ -319,6 +318,50 @@ class AnalyticsTabContainerPageState extends State<AnalyticsTabContainerPage>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                      padding: EdgeInsets.only(top: 4.v, left: 3.h),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Activity", style: theme.textTheme.bodyMedium),
+                            SizedBox(height: 3.v),
+                            Text("Sun Time:",
+                                style: CustomTextStyles.titleLargeInterGray900)
+                          ])),
+                  Container(
+                      height: 34.v,
+                      width: 220.h,
+                      margin: EdgeInsets.only(bottom: 15.v, right: 10.h),
+                      decoration: BoxDecoration(
+                          color: appTheme.gray10001,
+                          borderRadius: BorderRadius.circular(12.h)),
+                      child: TabBar(
+                          controller: tabviewController,
+                          labelPadding: EdgeInsets.only(right: 5.h),
+                          labelColor: appTheme.whiteA700,
+                          labelStyle: TextStyle(
+                              fontSize: 12.fSize,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w500),
+                          unselectedLabelColor: appTheme.gray600,
+                          unselectedLabelStyle: TextStyle(
+                              fontSize: 12.fSize,
+                              fontFamily: 'Inter',
+                              fontWeight: FontWeight.w400),
+                          indicatorPadding: EdgeInsets.all(4.0.h),
+                          indicator: BoxDecoration(
+                              color: appTheme.teal400,
+                              borderRadius: BorderRadius.circular(13.h)),
+                          tabs: [
+                            Tab(child: Text("Yearly")),
+                            Tab(child: Text("Monthly")),
+                            Tab(child: Text("Weekly"))
+                          ]))
+                ]),
           
           Divider(
             color: theme.colorScheme.onError,

@@ -112,7 +112,7 @@ class TextThemes {
           fontWeight: FontWeight.w400,
         ),
         bodySmall: TextStyle(
-          color: colorScheme.secondaryContainer,
+          color: Colors.black,
           fontSize: 12.fSize,
           fontFamily: 'Inter',
           fontWeight: FontWeight.w400,
@@ -176,7 +176,7 @@ class ColorSchemes {
     primary: Color(0XFF2DC1A6),
     primaryContainer: Color(0XFF1C1C1C),
     secondary: Color(0XFF1C1C1C),
-    secondaryContainer: Color(0XFF246BF5),
+    secondaryContainer: Color(0XFF1C1C1C),
     tertiary: Color(0XFF1C1C1C),
     tertiaryContainer: Color(0XFF246BF5),
 

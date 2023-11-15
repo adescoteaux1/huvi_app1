@@ -141,7 +141,7 @@ class CustomTextStyles {
         color: appTheme.gray600,
       );
   static get bodySmallSecondaryContainer => theme.textTheme.bodySmall!.copyWith(
-        color: theme.colorScheme.secondaryContainer,
+        color: Colors.black,
       );
   // Display text style
   static get displayMediumRoboto =>

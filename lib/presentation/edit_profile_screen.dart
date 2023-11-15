@@ -361,7 +361,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   /// Section Widget
   Widget _buildProfileStack(BuildContext context) {
     return SizedBox(
-      height: 174.v,
+      height: 190.v,
       width: 395.h,
       child: Stack(
         alignment: Alignment.bottomCenter,
@@ -372,25 +372,27 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               margin: EdgeInsets.only(bottom: 47.v),
               padding: EdgeInsets.symmetric(horizontal: 27.h),
               decoration: AppDecoration.fillYellow,
-              child: Row(
+
+              child: Padding(padding: EdgeInsets.only(top: 15.v), child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CustomImageView(
                     svgPath: ImageConstant.imgArrowRight,
-                    height: 12.v,
+                    height: 20.v,
                     width: 24.h,
                     margin: EdgeInsets.only(bottom: 115.v),
                   ),
                   _buildEditProfileButton(context),
-                ],
+                ],),
               ),
             ),
           ),
           CustomImageView(
             imagePath: ImageConstant.imgProfilepicjennifer,
-            height: 144.v,
+            height: 150.v,
             width: 142.h,
             alignment: Alignment.bottomCenter,
+            margin: EdgeInsets.only(top: 10.v),
           ),
         ],
       ),
