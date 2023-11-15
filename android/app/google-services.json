@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "625268055992",
+    "project_id": "huvi-3b762",
+    "storage_bucket": "huvi-3b762.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:625268055992:android:110e9772a06d6ddf79794d",
+        "android_client_info": {
+          "package_name": "com.example.huvi_app1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOIVfCmXqF4PB-2IrxBXKJq__sSwi-VCE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
