@@ -4,9 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:huvi_app1/presentation/login_vtwo_screen/login_vtwo_screen.dart';
 import 'package:huvi_app1/presentation/uv_status_vone_page/uv_status_vone_page.dart';
-
+import 'package:supabase_flutter/supabase_flutter.dart';
+/*
 class AuthPage extends StatelessWidget {
-  const AuthPage({super.key});
+  final SupabaseClient supabase;
+  const AuthPage({super.key, required this.supabase});
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +22,11 @@ class AuthPage extends StatelessWidget {
           }
           //not logged in
           else {
-            return LoginVtwoScreen();
+            return LoginVtwoScreen(supabase: this.supabase);
           }
         },
       ),
     );
   }
 }
+*/

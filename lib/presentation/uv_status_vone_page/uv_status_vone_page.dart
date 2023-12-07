@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:huvi_app1/core/app_export.dart';
 import 'package:huvi_app1/core/models/weather_models.dart';
+import 'package:huvi_app1/core/utils/constants.dart';
 import 'package:huvi_app1/presentation/recommendation_vone_screen/recommendation_vone_screen.dart';
 import 'package:huvi_app1/widgets/clock_widget.dart';
 import 'package:huvi_app1/widgets/custom_bottom_bar.dart';
@@ -24,6 +25,8 @@ class UvStatusVonePage extends StatefulWidget {
 }
 
 class _UvStatusVonePageState extends State<UvStatusVonePage> {
+  
+  AppConstants constants = AppConstants();
   final _weatherService = WeatherService('2cab5c5e69ebafa5c4a0557e156831a2');
   Weather? _weather;
 
@@ -51,11 +54,11 @@ class _UvStatusVonePageState extends State<UvStatusVonePage> {
   @override
   void initState() {
     super.initState();
+    constants = AppConstants();
 
     _fetchWeather();
     loadJsonAsset();
   }
-
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
@@ -93,13 +96,15 @@ class _UvStatusVonePageState extends State<UvStatusVonePage> {
                                 Padding(
                                     padding:
                                         EdgeInsets.only(left: 11.h, top: 10.v),
-                                    child: Text('47°F',//'${_weather?.temperature.round()} °C',
+                                    child: Text(//'47°F',
+                                    constants.temperature + '°F',
                                         style: CustomTextStyles
                                             .headlineLargeBlack90001)),
                                     Padding(
                                     padding:
                                         EdgeInsets.only(left: 11.h, top: 10.v),
-                                    child: Text('Cloudy',//'${_weather?.mainCondition}',
+                                    child: Text('Cloudy',
+                                    //constants.condition,
                                         style: CustomTextStyles
                                             .headlineLargeBlack90001))
                               ])),
@@ -129,7 +134,7 @@ class _UvStatusVonePageState extends State<UvStatusVonePage> {
                                           crossAxisAlignment: CrossAxisAlignment.end,
                                           children: [
                                             SizedBox(height: 7.v),
-                                            Text("7",
+                                            Text(uvIndex.toString(),
                                                 style: CustomTextStyles
                                                     .interBlack90001)
                                           ])))),
@@ -151,7 +156,7 @@ class _UvStatusVonePageState extends State<UvStatusVonePage> {
                                     Padding(
                                             padding:
                                                 EdgeInsets.only(top: 15.v),
-                                            child: SeverityGauge(severity: 0.7)),
+                                            child: SeverityGauge(severity: uvIndex/10)),
                                   ])),
                           Padding(
                               padding: EdgeInsets.only(
@@ -198,7 +203,8 @@ class _UvStatusVonePageState extends State<UvStatusVonePage> {
                                       margin: EdgeInsets.only(left: 5.h),
                                       child: //LocationWidget(),
                                           Text(
-                                        'Boston',//'${_weather?.cityName ?? 'loading...'}',
+                                        //'Boston',
+                                        constants.city,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(fontSize: 24),

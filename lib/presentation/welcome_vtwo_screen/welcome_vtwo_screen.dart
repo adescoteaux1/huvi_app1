@@ -6,9 +6,12 @@ import 'package:huvi_app1/widgets/custom_elevated_button.dart';
 import 'package:huvi_app1/widgets/custom_outlined_button.dart';
 import 'package:flutter/material.dart';
 import 'package:huvi_app1/routes/app_routes.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class WelcomeVtwoScreen extends StatelessWidget {
-  const WelcomeVtwoScreen({Key? key})
+  final SupabaseClient supabase;
+
+  const WelcomeVtwoScreen({Key? key, required this.supabase})
       : super(
           key: key,
         );

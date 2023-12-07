@@ -10,8 +10,14 @@ import 'package:huvi_app1/presentation/app_navigation_screen/app_navigation_scre
 
 import 'package:huvi_app1/presentation/edit_profile_screen.dart';
 import 'package:huvi_app1/presentation/analytics_page.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AppRoutes {
+  final SupabaseClient _supabase;
+
+  AppRoutes() : _supabase = supabaseInstance;
+  
+
   static const String signUpVoneScreen = '/sign_up_vone_screen';
 
   static const String loginVtwoScreen = '/login_vtwo_screen';
@@ -38,12 +44,18 @@ class AppRoutes {
 
   static const String analyticsContainerScreen = '/analytics_container_screen';
 
+  
+
+  static get supabaseInstance => SupabaseClient(
+    'https://jlaeonshmaqkwztitqld.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsYWVvbnNobWFxa3d6dGl0cWxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDEyODM1NDUsImV4cCI6MjAxNjg1OTU0NX0.vliW18yuZr34-2XdO36ahJorxJkotHkZiSwJRO3fhRE',);
+
 
   static Map<String, WidgetBuilder> routes = {
     signUpVoneScreen: (context) => SignUpVoneScreen(),
     loginVtwoScreen: (context) => LoginVtwoScreen(),
     profileVoneScreen: (context) => ProfileVoneScreen(),
-    welcomeVtwoScreen: (context) => WelcomeVtwoScreen(),
+    welcomeVtwoScreen: (context) => WelcomeVtwoScreen(supabase: supabaseInstance),
     uvStatusVoneContainerScreen: (context) => UvStatusVoneContainerScreen(),
     recommendationVoneScreen: (context) => RecommendationVoneScreen(),
     appNavigationScreen: (context) => AppNavigationScreen(),

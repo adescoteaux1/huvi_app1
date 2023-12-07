@@ -9,11 +9,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:huvi_app1/main.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
-    await tester.pumpWidget(MyApp());
+    final supabase = SupabaseClient(
+        'https://jlaeonshmaqkwztitqld.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpsYWVvbnNobWFxa3d6dGl0cWxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDEyODM1NDUsImV4cCI6MjAxNjg1OTU0NX0.vliW18yuZr34-2XdO36ahJorxJkotHkZiSwJRO3fhRE',
+      );
+
+    await tester.pumpWidget(MyApp(supabase: supabase));
 
     // Verify that our counter starts at 0.
     expect(find.text('0'), findsOneWidget);

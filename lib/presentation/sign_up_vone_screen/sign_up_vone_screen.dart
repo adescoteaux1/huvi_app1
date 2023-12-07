@@ -1,13 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gotrue/src/types/auth_response.dart';
 import 'package:huvi_app1/core/app_export.dart';
+import 'package:huvi_app1/main.dart';
+import 'package:huvi_app1/presentation/uv_status_vone_container_screen/uv_status_vone_container_screen.dart';
 import 'package:huvi_app1/widgets/custom_elevated_button.dart';
 import 'package:huvi_app1/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:huvi_app1/presentation/login_vtwo_screen/login_vtwo_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:huvi_app1/core/utils/constants.dart';
 
 
 class SignUpVoneScreen extends StatelessWidget {
+  //final SupabaseClient supabase;
   SignUpVoneScreen({Key? key})
       : super(
           key: key,
@@ -20,6 +26,24 @@ class SignUpVoneScreen extends StatelessWidget {
   
   get context => null;
 
+  Future<String> signUpEmailAndPassword(String email, String password) async {
+    
+    final response = await supabase.auth.signUp(email: email, password: password);
+ 
+    final userId = response.user?.id;
+    if (userId == null) {
+      throw UnimplementedError();
+    }
+    setUser(userId);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>  UvStatusVoneContainerScreen()),
+    );
+    return userId;
+    
+  }
+
+/*
   void signUserUp() async {
     showDialog(
       context: context, 
@@ -32,15 +56,38 @@ class SignUpVoneScreen extends StatelessWidget {
  
     try {
       if(passwordController.text == confirmPasswordController.text) {
-        //create the user
-        UserCredential? userCredential =
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text,
+        final email = emailController.text;
+        final password = passwordController.text;
+        
+        final response = await Supabase.auth.signUp(
+        email: email,
+        password: password,
+      );
+        setLoading(true);
+          const {
+            data: { session },
+            error,
+          } = await supabase.auth.signUp(
+        email: emailController.text,
           password: passwordController.text,
-        );
+          );
+
+          if (error) Alert.alert(error.message);
+          if (!session)
+            Alert.alert("Please check your inbox for email verification!");
+          setLoading(false);
+        }
+
+        //create the user
+        
+        //await FirebaseAuth.instance.//createUserWithEmailAndPassword(
+        await supabase.auth.signUp(
+        email: emailController.text,
+          password: passwordController.text,
+          );
 
         //create a user document and add to firestore
-        createUserDocument(userCredential);
+        //createUserDocument(userCredential);
 
       } else {
         showErrorMessage("Passwords Don't Match");
@@ -76,7 +123,7 @@ class SignUpVoneScreen extends StatelessWidget {
       },
     );
   }
-
+*/
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -161,15 +208,17 @@ class SignUpVoneScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 24.v),
                 CustomElevatedButton(
-                  onTap: signUserUp,/*() {
-                          // Replace 'YourRouteNameHere' with the actual route name to navigate to the login screen.
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) =>  ProfileVoneScreen()),
-                          );
-                        },*/
+                  onTap: () { if (passwordController.text == confirmPasswordController.text) {
+                      signUpEmailAndPassword(emailController.text, passwordController.text);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) =>  UvStatusVoneContainerScreen()),
+                      );
+                    };
+                  },
                   text: "Sign Up",
                   buttonStyle: CustomButtonStyles.fillYellow,
+                  
                 ),
                 SizedBox(height: 35.v),
                 Row(

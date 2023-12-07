@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:huvi_app1/core/app_export.dart';
+//import 'e:huvi_app1/core/profile/profile.dart';
 import 'package:huvi_app1/presentation/profile_vone_screen/profile_vone_screen.dart';
 import 'package:huvi_app1/widgets/custom_checkbox_button.dart';
 import 'package:huvi_app1/widgets/custom_drop_down.dart';
@@ -7,7 +8,12 @@ import 'package:huvi_app1/widgets/custom_elevated_button.dart';
 import 'package:huvi_app1/widgets/custom_text_form_field.dart';
 
 class EditProfileScreen extends StatefulWidget {
-  EditProfileScreen({Key? key})
+  //final ProfileProvider profileProvider;
+  
+  EditProfileScreen({
+    Key? key,
+    //required this.profileProvider,
+  })
       : super(
           key: key,
         );
@@ -443,7 +449,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             hintText: "Select Eye Color",
             items: dropdownItemList,
-            onChanged: (value) {},
+            onChanged: (value) {
+              setState(() {
+                    //widget.profileProvider.profile?.eyeColor = value;
+                  });
+            },
           ),
           Padding(
             padding: EdgeInsets.only(left: 35.h),
@@ -459,7 +469,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               hintText: "Select Skin Tone",
               items: dropdownItemList1,
-              onChanged: (value) {},
+              onChanged: (value) {
+                setState(() {
+                    //widget.profileProvider.profile?.skinTone = value;
+                  });
+              },
             ),
           ),
         ],

@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:get_it/get_it.dart';
 import 'package:huvi_app1/core/app_export.dart';
+import 'package:huvi_app1/main.dart';
 import 'package:huvi_app1/presentation/uv_status_vone_container_screen/uv_status_vone_container_screen.dart';
 import 'package:huvi_app1/presentation/uv_status_vone_page/uv_status_vone_page.dart';
 import 'package:huvi_app1/widgets/custom_elevated_button.dart';
@@ -7,8 +9,12 @@ import 'package:huvi_app1/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:huvi_app1/presentation/sign_up_vone_screen/sign_up_vone_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 
 class LoginVtwoScreen extends StatefulWidget {
+
   LoginVtwoScreen({Key? key})
       : super(
           key: key,
@@ -19,9 +25,101 @@ class LoginVtwoScreen extends StatefulWidget {
 }
 
 class _LoginVtwoScreenState extends State<LoginVtwoScreen> {
+
   TextEditingController emailController = TextEditingController();
 
   TextEditingController passwordController = TextEditingController();
+
+
+  Future<String> signInEmailAndPassword(String email, String password) async {
+    final response = await supabase.auth.signInWithPassword(
+      email: email,
+      password: password,
+    );
+ 
+    final userId = response.user?.id;
+    if (userId == null) {
+      throw UnimplementedError();
+    }
+ 
+    return userId;
+  }
+
+  Future<AuthResponse> _googleSignIn() async {
+    /// TODO: update the Web client ID with your own.
+    ///
+    /// Web Client ID that you registered with Google Cloud.
+    const webClientId = 'my-web.apps.googleusercontent.com';
+
+    /// TODO: update the iOS client ID with your own.
+    ///
+    /// iOS Client ID that you registered with Google Cloud.
+    const iosClientId = 'my-ios.apps.googleusercontent.com';
+
+    // Google sign in on Android will work without providing the Android
+    // Client ID registered on Google Cloud.
+
+    final GoogleSignIn googleSignIn = GoogleSignIn(
+      clientId: iosClientId,
+      serverClientId: webClientId,
+    );
+    final googleUser = await googleSignIn.signIn();
+    final googleAuth = await googleUser!.authentication;
+    final accessToken = googleAuth.accessToken;
+    final idToken = googleAuth.idToken;
+
+    if (accessToken == null) {
+      throw 'No Access Token found.';
+    }
+    if (idToken == null) {
+      throw 'No ID Token found.';
+    }
+
+    return supabase.auth.signInWithIdToken(
+      provider: Provider.google,
+      idToken: idToken,
+      accessToken: accessToken,
+    );
+  }
+
+/*
+  Future<void> login() async {
+    final client = GetIt.instance<SupabaseClient>();
+    var data;
+    var error;
+    { data, error } = await client.auth
+        .signInWithPassword(email: emailController.text, password: passwordController.text);
+
+    if (result.data != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Login Successful"),
+      ));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    } else if (result.error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(result.error!.message),
+      ));
+    }
+  }
+*/
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  void showErrorMessage(String message) {
+    showDialog(
+      context: context, 
+      builder: (context) {
+        return AlertDialog(
+          title: Text(message)
+        );
+      },
+    );
+  }
 
   void signUserIn() async {
     showDialog(
@@ -33,6 +131,23 @@ class _LoginVtwoScreenState extends State<LoginVtwoScreen> {
       },
     );
 
+    try { 
+      await supabase.auth.signInWithPassword(
+      email: emailController.text,
+      password: passwordController.text,
+      );
+    } on AuthException catch (e) {
+      Navigator.pop(context);
+      //WRONG EMAIL
+      if (e == 'user-not-found') {
+        print('No user found for that email.');
+        
+        //show error to user
+        showErrorMessage("Invalid Email");
+      } 
+    }
+
+/*
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: emailController.text,
@@ -58,18 +173,10 @@ class _LoginVtwoScreenState extends State<LoginVtwoScreen> {
         showErrorMessage("Incorrect Email");
       } 
     }
+    */
   }
 
-  void showErrorMessage(String message) {
-    showDialog(
-      context: context, 
-      builder: (context) {
-        return AlertDialog(
-          title: Text(message)
-        );
-      },
-    );
-  }
+  
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -157,7 +264,7 @@ class _LoginVtwoScreenState extends State<LoginVtwoScreen> {
                 CustomElevatedButton(
                   onTap: () {
                           // Replace 'YourRouteNameHere' with the actual route name to navigate to the login screen.
-                          
+                          signInEmailAndPassword(emailController.text, passwordController.text);
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) =>  UvStatusVoneContainerScreen()),
@@ -206,6 +313,9 @@ class _LoginVtwoScreenState extends State<LoginVtwoScreen> {
                       svgPath: ImageConstant.imgIconsLogogoogle,
                     ),
                   ),
+                  onTap: () => {
+                    _googleSignIn(),
+                  },
                   buttonStyle: CustomButtonStyles.fillGray,
                   buttonTextStyle: CustomTextStyles.titleSmallYellow700,
                 ),
