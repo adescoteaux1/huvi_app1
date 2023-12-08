@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:huvi_app1/core/app_export.dart';
+import 'package:huvi_app1/core/utils/constants.dart';
+import 'package:huvi_app1/main.dart';
 //import 'e:huvi_app1/core/profile/profile.dart';
 import 'package:huvi_app1/presentation/profile_vone_screen/profile_vone_screen.dart';
+import 'package:huvi_app1/widgets/checkboxGroup.dart';
 import 'package:huvi_app1/widgets/custom_checkbox_button.dart';
 import 'package:huvi_app1/widgets/custom_drop_down.dart';
 import 'package:huvi_app1/widgets/custom_elevated_button.dart';
@@ -23,9 +26,6 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  TextEditingController nameEditTextController = TextEditingController();
-
-  TextEditingController ageEditTextController = TextEditingController();
 
   List<String> dropdownItemList = [
     "Brown",
@@ -41,6 +41,31 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   ];
 
   bool container = false;
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController ageController = TextEditingController();
+  final List<String> selectedEyeColor = [];
+  final List<String> selectedSkinTone = [];
+  List<String> selectedSkinCharacteristics = [];
+  List<String> selectedSkinCare = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Get the user's profile data from Supabase
+    supabase.from('users').select().single().then((response) {
+      if (response.status == 200) {
+        // Set the user's profile data in the state
+        nameController.text = response.data['name'];
+        ageController.text = response.data['age'].toString();
+        selectedEyeColor.add(response.data['eye_color']);
+        selectedSkinTone.add(response.data['skin_tone']);
+        selectedSkinCharacteristics.addAll(response.data['skin_characteristics']);
+        selectedSkinCare.addAll(response.data['skin_care']);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,6 +155,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           style: theme.textTheme.titleMedium,
                         ),
                       ),
+                      
                     ],
                   ),
                 ),
@@ -146,192 +172,88 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         child: Stack(
                           alignment: Alignment.bottomLeft,
                           children: [
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  left: 44.h,
-                                  top: 35.v,
-                                ),
-                                child: Text(
-                                  "Burns Easily",
-                                  style: theme.textTheme.bodyLarge,
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  left: 46.h,
-                                  bottom: 62.v,
-                                ),
-                                child: Text(
-                                  "Sensitive",
-                                  style: theme.textTheme.bodyLarge,
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Padding(
-                                padding: EdgeInsets.only(
-                                  left: 44.h,
-                                  bottom: 17.v,
-                                ),
-                                child: Text(
-                                  "Acne-prone",
-                                  style: theme.textTheme.bodyLarge,
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Padding(
-                                padding: EdgeInsets.only(left: 8.h),
-                                child: Text(
-                                  "Skin Characteristics:",
-                                  style: theme.textTheme.titleMedium,
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: Container(
-                                height: 54.v,
-                                width: 52.h,
-                                margin: EdgeInsets.only(top: 17.v),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 14.h,
-                                  vertical: 15.v,
-                                ),
-                                decoration: AppDecoration.outlinePrimary,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Container(
-                                        height: 18.adaptSize,
-                                        width: 18.adaptSize,
-                                        decoration: BoxDecoration(
-                                          color: appTheme.teal400,
-                                          borderRadius: BorderRadius.circular(
-                                            2.h,
+                            Row(
+                              children: [
+                                Column(children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: SizedBox(
+                                    height: 100.v,
+                                    width: 85.h,
+                                    child: Stack(
+                                      alignment: Alignment.bottomLeft,
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.topRight,
+                                          child: SizedBox(
+                                            height: 20.v,
+                                            width: 100.h,
+                                            child: Stack(
+                                              alignment: Alignment.center,
+                                              children: [
+                                                Align(
+                                                  alignment: Alignment.center,
+                                                  child: Text(
+                                                    "Skin Care:",
+                                                    style: theme.textTheme.titleMedium,
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment: Alignment.topLeft,
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(left: 15.h, top: 30.v),
+                                                    child: CheckboxGroup(
+                                                      options: ['Sunscreen', 'Moisturizer', 'Serum', 'Mask', 'Cleanser', 'Toner'],
+                                                      selected: selectedSkinCare,
+                                                      onSelected: (selectedValues) {
+                                                        setState(() {
+                                                          selectedSkinCare = selectedValues;
+                                                        });
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                    CustomImageView(
-                                      svgPath:
-                                          ImageConstant.imgIconsCheckSmall,
-                                      height: 24.adaptSize,
-                                      width: 24.adaptSize,
-                                      alignment: Alignment.center,
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                            CustomImageView(
-                              svgPath: ImageConstant.imgCheckboxes,
-                              height: 54.v,
-                              width: 52.h,
-                              alignment: Alignment.bottomLeft,
-                              margin: EdgeInsets.only(bottom: 46.v),
-                            ),
-                            Align(
-                              alignment: Alignment.bottomLeft,
-                              child: Container(
-                                height: 54.v,
-                                width: 52.h,
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 14.h,
-                                  vertical: 15.v,
+                              ]),SizedBox(width: 100.v),
+                                Column(children: [
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    "Skin Characteristics:",
+                                    style: theme.textTheme.titleMedium,
+                                  ),
                                 ),
-                                decoration: AppDecoration.outlinePrimary,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Container(
-                                        height: 18.adaptSize,
-                                        width: 18.adaptSize,
-                                        decoration: BoxDecoration(
-                                          color: appTheme.teal400,
-                                          borderRadius: BorderRadius.circular(
-                                            2.h,
-                                          ),
-                                        ),
-                                      ),
+                                SizedBox(height: 8.h), // Add space between the text and checkbox group
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(left: 15.h),
+                                    child: CheckboxGroup(
+                                      options: ['Burns Easily', 'Mature', 'Sensitive', 'Oily', 'Acne-prone', 'Dry'],
+                                      selected: selectedSkinCharacteristics,
+                                      onSelected: (selectedValues) {
+                                        setState(() {
+                                          selectedSkinCharacteristics = selectedValues;
+                                        });
+                                      },
                                     ),
-                                    CustomImageView(
-                                      svgPath:
-                                          ImageConstant.imgIconsCheckSmall,
-                                      height: 24.adaptSize,
-                                      width: 24.adaptSize,
-                                      alignment: Alignment.center,
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ),
-                            CustomImageView(
-                              svgPath: ImageConstant.imgCheckboxes,
-                              height: 54.v,
-                              width: 51.h,
-                              alignment: Alignment.topRight,
-                              margin: EdgeInsets.only(top: 17.v),
-                            ),
-                            CustomImageView(
-                              svgPath: ImageConstant.imgCheckboxes,
-                              height: 54.v,
-                              width: 51.h,
-                              alignment: Alignment.bottomRight,
-                              margin: EdgeInsets.only(bottom: 46.v),
-                            ),
-                            CustomImageView(
-                              svgPath: ImageConstant.imgCheckboxes,
-                              height: 54.v,
-                              width: 51.h,
-                              alignment: Alignment.bottomRight,
-                              margin: EdgeInsets.only(bottom: 2.v),
+                              ],
+                              )
+                              ]
                             ),
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: 32.v,
-                          bottom: 16.v,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Mature",
-                              style: theme.textTheme.bodyLarge,
-                            ),
-                            SizedBox(height: 26.v),
-                            Padding(
-                              padding: EdgeInsets.only(left: 4.h),
-                              child: Text(
-                                "Oily",
-                                style: theme.textTheme.bodyLarge,
-                              ),
-                            ),
-                            SizedBox(height: 25.v),
-                            Padding(
-                              padding: EdgeInsets.only(left: 4.h),
-                              child: Text(
-                                "Dry",
-                                style: theme.textTheme.bodyLarge,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      
                     ],
                   ),
                 ),
@@ -411,7 +333,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       padding: EdgeInsets.only(left: 23.h),
       child: CustomTextFormField(
         width: 248.h,
-        controller: nameEditTextController,
+        controller: nameController,
       ),
     );
   }
@@ -422,7 +344,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       padding: EdgeInsets.only(left: 23.h),
       child: CustomTextFormField(
         width: 84.h,
-        controller: ageEditTextController,
+        controller: ageController,
         textInputAction: TextInputAction.done,
       ),
     );
@@ -449,9 +371,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             hintText: "Select Eye Color",
             items: dropdownItemList,
+            value: selectedEyeColor.isNotEmpty ? selectedEyeColor[0] : null,
             onChanged: (value) {
               setState(() {
-                    //widget.profileProvider.profile?.eyeColor = value;
+                    selectedEyeColor.clear();
+                    selectedEyeColor.add(value!);
                   });
             },
           ),
@@ -469,9 +393,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               hintText: "Select Skin Tone",
               items: dropdownItemList1,
+              value: selectedSkinTone.isNotEmpty ? selectedSkinTone[0] : null,
               onChanged: (value) {
                 setState(() {
-                    //widget.profileProvider.profile?.skinTone = value;
+                    selectedSkinTone.clear();
+                    selectedSkinTone.add(value!);
                   });
               },
             ),
@@ -491,8 +417,33 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       buttonStyle: CustomButtonStyles.fillTeal,
       buttonTextStyle: theme.textTheme.titleSmall!,
       onTap: () {
-        // Replace 'YourRouteNameHere' with the actual route name to navigate to the login screen.
-        
+        () async {
+          // Update the user's profile data in Supabase
+          final response = await supabase.from('users').update({
+            'name': nameController.text,
+            'age': int.parse(ageController.text),
+            'eye_color': selectedEyeColor.isNotEmpty ? selectedEyeColor[0] : null,
+            'skin_tone': selectedSkinTone.isNotEmpty ? selectedSkinTone[0] : null,
+            'skin_characteristics': selectedSkinCharacteristics,
+            'skin_care': selectedSkinCare,
+          }).match({ 'user_id': userID }).single();
+
+          if (response.status == 200) {
+            // Show a success message
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Profile updated successfully!'),
+              ),
+            );
+          } else {
+            // Show an error message
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Error updating profile!'),
+              ),
+            );
+          }
+        };
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) =>  ProfileVoneScreen()),
@@ -517,113 +468,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             child: Stack(
               alignment: Alignment.bottomRight,
               children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      top: 29.v,
-                      right: 10.h,
-                      left: 7.h
-                    ),
-                    child: Text(
-                      "Sunscreen",
-                      style: theme.textTheme.bodyLarge,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: EdgeInsets.only(bottom: 17.v, right: 5.h),
-                    child: Text(
-                      "Moisturizer",
-                      style: theme.textTheme.bodyLarge,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: SizedBox(
-                    height: 100.v,
-                    width: 85.h,
-                    child: Stack(
-                      alignment: Alignment.bottomLeft,
-                      children: [
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: SizedBox(
-                            height: 20.v,
-                            width: 100.h,
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Text(
-                                    "Skin Care:",
-                                    style: theme.textTheme.titleMedium,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomLeft,
-                          child: Container(
-                            padding: EdgeInsets.all(12.h),
-                            decoration: AppDecoration.outlinePrimary,
-                            child: CustomCheckboxButton(
-                              width: 30.h,
-                              value: container,
-                              isRightCheck: true,
-                              onChange: (value) {
-                                container = value;
-                              },
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Container(
-                            height: 48.adaptSize,
-                            width: 48.adaptSize,
-                            margin: EdgeInsets.only(top: 16.v, left: 12.h),
-                            padding: EdgeInsets.all(12.h),
-                            decoration: AppDecoration.outlinePrimary,
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: Container(
-                                    height: 18.adaptSize,
-                                    width: 22.adaptSize,
-                                    decoration: BoxDecoration(
-                                      color: appTheme.teal400,
-                                      borderRadius: BorderRadius.circular(
-                                        2.h,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                CustomImageView(
-                                  svgPath: ImageConstant.imgIconsCheckSmall,
-                                  height: 24.adaptSize,
-                                  width: 22.adaptSize,
-                                  alignment: Alignment.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
+             
           _buildSaveButton(context),
         ],
       ),

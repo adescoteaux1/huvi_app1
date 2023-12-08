@@ -12,7 +12,21 @@ final _weatherService = WeatherService('2cab5c5e69ebafa5c4a0557e156831a2');
 late int userID;
 int uvIndex = 3;
 String uvText = getUvText(uvIndex);
+String sunscreen = getSunscreenTime(uvIndex);
 
+String getSunscreenTime(int uvIntex) {
+  String text;
+  if (uvIndex < 6) {
+    text = '2 hours';
+  } else if (uvIndex < 8) {
+    text = '1 to 2 hours';
+  } else if (uvIndex < 11) {
+    text = '1 to 1.5 hours';
+  } else {
+    text = '1 hour or more';
+  }
+  return text;
+}
 
 String getUvText(int uvIndex) {
   String text;

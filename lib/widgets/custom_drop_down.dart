@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:huvi_app1/core/app_export.dart';
 
 class CustomDropDown extends StatelessWidget {
+  
+
   CustomDropDown({
     Key? key,
     this.alignment,
@@ -22,6 +24,7 @@ class CustomDropDown extends StatelessWidget {
     this.fillColor,
     this.filled = true,
     this.validator,
+    this.value,
     this.onChanged,
   }) : super(
           key: key,
@@ -64,6 +67,7 @@ class CustomDropDown extends StatelessWidget {
   final FormFieldValidator<String>? validator;
 
   final Function(String)? onChanged;
+  final  String? value;
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +99,7 @@ class CustomDropDown extends StatelessWidget {
           }).toList(),
           decoration: decoration,
           validator: validator,
+          value: value,
           onChanged: (value) {
             onChanged!(value.toString());
           },

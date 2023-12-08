@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:huvi_app1/core/app_export.dart';
 import 'package:huvi_app1/core/utils/constants.dart';
+import 'package:huvi_app1/core/utils/timer.dart';
 import 'package:huvi_app1/presentation/uv_status_vone_page/uv_status_vone_page.dart';
 import 'package:huvi_app1/widgets/app_bar/appbar_image.dart';
 import 'package:huvi_app1/widgets/app_bar/appbar_title.dart';
@@ -69,6 +72,9 @@ class RecommendationVoneScreen extends StatelessWidget {
                             textAlign: TextAlign.left),
                         CustomElevatedButton(
                             text: "SET SUNSCREEN TIMER",
+                            onTap: () => {
+                              _showTimerSettingPopup(context)
+                            },
                             margin: EdgeInsets.only(
                                 left: 1.h, top: 17.v, right: 18.h),
                             leftIcon: Container(
@@ -126,3 +132,13 @@ class RecommendationVoneScreen extends StatelessWidget {
     Navigator.pop(context);
   }
 }
+
+void _showTimerSettingPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return TimerSettingDialog();
+      },
+    );
+  }
+

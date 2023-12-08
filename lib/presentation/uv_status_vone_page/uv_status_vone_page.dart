@@ -12,7 +12,9 @@ import 'package:huvi_app1/widgets/location.dart';
 import 'package:huvi_app1/widgets/severity_gague.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:huvi_app1/widgets/timer_display.dart';
 import 'package:lottie/lottie.dart';
+import 'package:huvi_app1/core/utils/timer.dart';
 
 
 import '../../core/services/weather_service.dart';
@@ -25,6 +27,8 @@ class UvStatusVonePage extends StatefulWidget {
 }
 
 class _UvStatusVonePageState extends State<UvStatusVonePage> {
+  TimerSettingDialog timer = TimerSettingDialog();
+
   
   AppConstants constants = AppConstants();
   final _weatherService = WeatherService('2cab5c5e69ebafa5c4a0557e156831a2');
@@ -58,6 +62,8 @@ class _UvStatusVonePageState extends State<UvStatusVonePage> {
 
     _fetchWeather();
     loadJsonAsset();
+    timer = TimerSettingDialog();
+
   }
   @override
   Widget build(BuildContext context) {
@@ -97,7 +103,7 @@ class _UvStatusVonePageState extends State<UvStatusVonePage> {
                                     padding:
                                         EdgeInsets.only(left: 11.h, top: 10.v),
                                     child: Text(//'47°F',
-                                    constants.temperature + '°F',
+                                    '${constants.temperature}°F',
                                         style: CustomTextStyles
                                             .headlineLargeBlack90001)),
                                     Padding(

@@ -16,6 +16,7 @@ class CustomCheckboxButton extends StatelessWidget {
     this.textStyle,
     this.textAlignment,
     this.isExpandedText = false,
+    this.checkColor,
   }) : super(
           key: key,
         );
@@ -44,6 +45,8 @@ class CustomCheckboxButton extends StatelessWidget {
 
   final bool isExpandedText;
 
+  final Color? checkColor;
+
   @override
   Widget build(BuildContext context) {
     return alignment != null
@@ -62,10 +65,7 @@ class CustomCheckboxButton extends StatelessWidget {
         child: Container(
           decoration: decoration,
           width: width,
-          child: (isRightCheck ?? false) ? rightSideCheckbox : leftSideCheckbox,
-        ),
-      );
-  Widget get leftSideCheckbox => Row(
+          child: Row(
         children: [
           Padding(
             child: checkboxWidget,
@@ -73,16 +73,8 @@ class CustomCheckboxButton extends StatelessWidget {
           ),
           isExpandedText ? Expanded(child: textWidget) : textWidget,
         ],
-      );
-  Widget get rightSideCheckbox => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          isExpandedText ? Expanded(child: textWidget) : textWidget,
-          Padding(
-            padding: EdgeInsets.only(left: 8),
-            child: checkboxWidget,
-          ),
-        ],
+      ),
+        ),
       );
   Widget get textWidget => Text(
         text ?? "",
