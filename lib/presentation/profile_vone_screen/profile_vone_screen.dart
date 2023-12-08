@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:huvi_app1/core/app_export.dart';
+import 'package:huvi_app1/core/utils/constants.dart';
+import 'package:huvi_app1/main.dart';
 import 'package:huvi_app1/presentation/analytics_container_screen.dart';
 import 'package:huvi_app1/presentation/analytics_page.dart';
 import 'package:huvi_app1/presentation/analytics_tab_container_page.dart';
@@ -12,6 +12,7 @@ import 'package:huvi_app1/widgets/custom_elevated_button.dart';
 import 'package:huvi_app1/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:huvi_app1/presentation/uv_status_vone_container_screen/uv_status_vone_container_screen.dart' as key;
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../widgets/custom_bottom_bar.dart';
 
@@ -27,21 +28,105 @@ class ProfileVoneScreen extends StatefulWidget {
 
 class _ProfileVoneScreenState extends State<ProfileVoneScreen> {
   //current user logged in
-  User? currentUser = FirebaseAuth.instance.currentUser;
+  final userId = supabase.auth.currentUser!.id;
+  var _loading;
+  String name = '';
+  String age = '';
+  final List<String> selectedEyeColor = [];
+  final List<String> selectedSkinTone = [];
+  List<String> selectedSkinCharacteristics = [];
+  List<String> selectedSkinCare = [];
 
-  //future to fetch user details
-  Future<DocumentSnapshot<Map<String, dynamic>>> getUserDetails() async {
-    return await FirebaseFirestore.instance
-      .collection("Users")
-      .doc(currentUser!.email)
-      .get();
+  String skinDetails = 'Skin Details: ';
+  String eyeColor = "";
+  String skinTone = "";
+
+  
+
+  String? _avatarUrl;
+
+  Future<void> _signOut() async {
+    try {
+      await supabase.auth.signOut();
+    } on AuthException catch (error) {
+      SnackBar(
+        content: Text(error.message),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      );
+    } catch (error) {
+      SnackBar(
+        content: const Text('Unexpected error occurred'),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      );
+    } finally {
+      if (mounted) {
+        Navigator.of(context).pushReplacementNamed('/login');
+      }
+    }
   }
 
-  void signUserOut() {
-    FirebaseAuth.instance.signOut();
+  Future<void> _getProfile() async {
+    initialize();
+
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      final userId = supabase.auth.currentUser!.id;
+      final data = await supabase
+          .from('user')
+          .select<Map<String, dynamic>>()
+          .eq('user_id', userId)
+          .single();
+      name = (data['name'] ?? 'Name:') as String;
+      age = (data['age'] ?? 'Age:') as String;
+      selectedEyeColor.add(data['eye_color']);
+        selectedSkinTone.add(data['skin_tone']);
+        selectedSkinCharacteristics.addAll(data['skin_characteristics']);
+        selectedSkinCare.addAll(data['skin_care']);
+        _avatarUrl = (data['avatar_url'] ?? '') as String;
+    } on PostgrestException catch (error) {
+      SnackBar(
+        content: Text(error.message),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      );
+    } catch (error) {
+      SnackBar(
+        content: const Text('Unexpected error occurred'),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+      }
+    }
   }
 
-  TextEditingController buttononeController = TextEditingController();
+  @override
+  void initState() {
+    
+    // TODO: implement initState
+    super.initState();
+    _getProfile();
+    
+  }
+
+  void initialize() {
+    selectedEyeColor[0] = '';
+    selectedSkinTone[0] = '';
+    selectedSkinCharacteristics[0] = '';
+    selectedSkinCare[0] = '';
+    
+    skinDetails += selectedSkinCharacteristics.join(', ');
+    skinDetails += ', applies ';
+    skinDetails += selectedSkinCare.join(', applies ');
+    eyeColor = selectedEyeColor[0];
+    skinTone = selectedSkinTone[0];
+  }
+    
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +202,7 @@ class _ProfileVoneScreenState extends State<ProfileVoneScreen> {
                       alignment: Alignment.bottomLeft,
                       onTap: () {
                           // Replace 'YourRouteNameHere' with the actual route name to navigate to the login screen.
-                          
+                          print(userID);
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (context) =>  EditProfileScreen()),
@@ -144,7 +229,7 @@ class _ProfileVoneScreenState extends State<ProfileVoneScreen> {
                               child: Padding(
                                 padding: EdgeInsets.only(bottom: 75.v),
                                 child: Text(
-                                  "Age: 32",
+                                  "Age: $age",
                                   style: theme.textTheme.bodyLarge,
                                 ),
                               ),
@@ -154,7 +239,7 @@ class _ProfileVoneScreenState extends State<ProfileVoneScreen> {
                               child: Padding(
                                 padding: EdgeInsets.only(bottom: 51.v),
                                 child: Text(
-                                  "Eye color: Blue",
+                                  "Eye color: " + eyeColor,
                                   style: theme.textTheme.bodyLarge,
                                 ),
                               ),
@@ -172,9 +257,10 @@ class _ProfileVoneScreenState extends State<ProfileVoneScreen> {
                                       child: SizedBox(
                                         width: 346.h,
                                         child: Text(
-                                          "Skin details: burns easily, applies sunscreen\n      regularly,  \n ",
+                                          skinDetails,
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
+                                          softWrap: true,
                                           style: theme.textTheme.bodyLarge!
                                               .copyWith(
                                             height: 1.50,
@@ -195,14 +281,13 @@ class _ProfileVoneScreenState extends State<ProfileVoneScreen> {
                                               padding:
                                                   EdgeInsets.only(left: 1.h),
                                               child: Text(
-                                                "Jennifer",
-                                                style: CustomTextStyles
-                                                    .headlineLargeYellow900Bold,
+                                                "Name: " + name,
+                                                style: theme.textTheme.headlineSmall,
                                               ),
                                             ),
                                             SizedBox(height: 14.v),
                                             Text(
-                                              "Fair Skin",
+                                              "Skin Tone: " + skinTone,
                                               style: theme.textTheme.bodyLarge,
                                             ),
                                           ],

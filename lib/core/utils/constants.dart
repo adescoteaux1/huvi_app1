@@ -9,7 +9,7 @@ final _weatherService = WeatherService('2cab5c5e69ebafa5c4a0557e156831a2');
   Weather? _weather;
   late String condition;
 
-late int userID;
+late var userID;
 int uvIndex = 3;
 String uvText = getUvText(uvIndex);
 String sunscreen = getSunscreenTime(uvIndex);

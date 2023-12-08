@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:huvi_app1/core/app_export.dart';
+import 'package:huvi_app1/core/utils/avatar.dart';
 import 'package:huvi_app1/core/utils/constants.dart';
 import 'package:huvi_app1/main.dart';
 //import 'e:huvi_app1/core/profile/profile.dart';
@@ -9,6 +10,7 @@ import 'package:huvi_app1/widgets/custom_checkbox_button.dart';
 import 'package:huvi_app1/widgets/custom_drop_down.dart';
 import 'package:huvi_app1/widgets/custom_elevated_button.dart';
 import 'package:huvi_app1/widgets/custom_text_form_field.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class EditProfileScreen extends StatefulWidget {
   //final ProfileProvider profileProvider;
@@ -49,13 +51,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   List<String> selectedSkinCharacteristics = [];
   List<String> selectedSkinCare = [];
 
+  String? _avatarUrl;
+  var _loading = true;
+
+
+  final user = supabase.auth.currentUser;
+
   @override
   void initState() {
     super.initState();
+    _getProfile();
 
     // Get the user's profile data from Supabase
     supabase.from('users').select().single().then((response) {
-      if (response.status == 200) {
         // Set the user's profile data in the state
         nameController.text = response.data['name'];
         ageController.text = response.data['age'].toString();
@@ -63,7 +71,116 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         selectedSkinTone.add(response.data['skin_tone']);
         selectedSkinCharacteristics.addAll(response.data['skin_characteristics']);
         selectedSkinCare.addAll(response.data['skin_care']);
+      
+    });
+  }
+
+  Future<void> _getProfile() async {
+    setState(() {
+      _loading = true;
+    });
+
+    try {
+      final userId = supabase.auth.currentUser!.id;
+      final data = await supabase
+          .from('user')
+          .select<Map<String, dynamic>>()
+          .eq('user_id', userId)
+          .single();
+      nameController.text = (data['name'] ?? '') as String;
+      ageController.text = (data['age'] ?? null) as String;
+      selectedEyeColor.add(data['eye_color']);
+        selectedSkinTone.add(data['skin_tone']);
+        selectedSkinCharacteristics.addAll(data['skin_characteristics']);
+        selectedSkinCare.addAll(data['skin_care']);
+        _avatarUrl = (data['avatar_url'] ?? '') as String;
+    } on PostgrestException catch (error) {
+      SnackBar(
+        content: Text(error.message),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      );
+    } catch (error) {
+      SnackBar(
+        content: const Text('Unexpected error occurred'),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
       }
+    }
+  }
+
+  /// Called when user taps `Update` button
+  Future<void> _updateProfile() async {
+    setState(() {
+      _loading = true;
+    });
+    final name = nameController.text.trim();
+    final age = int.parse(ageController.text.trim());
+    final updates = {
+      'user_id': user!.id,
+      'name': name,
+      'age': age,
+    };
+    try {
+      await supabase.from('users').upsert(updates);
+      if (mounted) {
+        const SnackBar(
+          content: Text('Successfully updated profile!'),
+        );
+      }
+    } on PostgrestException catch (error) {
+      SnackBar(
+        content: Text(error.message),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      );
+    } catch (error) {
+      SnackBar(
+        content: const Text('Unexpected error occurred'),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+      }
+    }
+  }
+
+  /// Called when image has been uploaded to Supabase storage from within Avatar widget
+  Future<void> _onUpload(String imageUrl) async {
+    try {
+      final userId = supabase.auth.currentUser!.id;
+      await supabase.from('profiles').upsert({
+        'id': userId,
+        'avatar_url': imageUrl,
+      });
+      if (mounted) {
+        const SnackBar(
+          content: Text('Updated your profile image!'),
+        );
+      }
+    } on PostgrestException catch (error) {
+      SnackBar(
+        content: Text(error.message),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      );
+    } catch (error) {
+      SnackBar(
+        content: const Text('Unexpected error occurred'),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      );
+    }
+    if (!mounted) {
+      return;
+    }
+
+    setState(() {
+      _avatarUrl = imageUrl;
     });
   }
 
@@ -168,7 +285,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     children: [
                       SizedBox(
                         height: 160.v,
-                        width: 205.h,
+                        width: 350.h,
                         child: Stack(
                           alignment: Alignment.bottomLeft,
                           children: [
@@ -187,7 +304,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                                           alignment: Alignment.topRight,
                                           child: SizedBox(
                                             height: 20.v,
-                                            width: 100.h,
+                                            width: 98.h,
                                             child: Stack(
                                               alignment: Alignment.center,
                                               children: [
@@ -289,7 +406,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   /// Section Widget
   Widget _buildProfileStack(BuildContext context) {
     return SizedBox(
-      height: 190.v,
+      height: 200.v,
       width: 395.h,
       child: Stack(
         alignment: Alignment.bottomCenter,
@@ -315,13 +432,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
             ),
           ),
-          CustomImageView(
-            imagePath: ImageConstant.imgProfilepicjennifer,
-            height: 150.v,
-            width: 142.h,
-            alignment: Alignment.bottomCenter,
-            margin: EdgeInsets.only(top: 10.v),
-          ),
+          Container(margin: EdgeInsets.only(top: 55.v),
+          child: Avatar(
+                  imageUrl: _avatarUrl,
+                  onUpload: _onUpload,
+                ),),
+          
+          
         ],
       ),
     );
@@ -418,6 +535,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       buttonTextStyle: theme.textTheme.titleSmall!,
       onTap: () {
         () async {
+          _updateProfile();
           // Update the user's profile data in Supabase
           final response = await supabase.from('users').update({
             'name': nameController.text,
@@ -426,7 +544,16 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             'skin_tone': selectedSkinTone.isNotEmpty ? selectedSkinTone[0] : null,
             'skin_characteristics': selectedSkinCharacteristics,
             'skin_care': selectedSkinCare,
-          }).match({ 'user_id': userID }).single();
+          }).single();
+
+          await supabase
+            .from('users')
+            .update({ 'name': nameController.text,
+            'age': int.parse(ageController.text),
+            'eye_color': selectedEyeColor.isNotEmpty ? selectedEyeColor[0] : null,
+            'skin_tone': selectedSkinTone.isNotEmpty ? selectedSkinTone[0] : null,
+            'skin_characteristics': selectedSkinCharacteristics,
+            'skin_care': selectedSkinCare });
 
           if (response.status == 200) {
             // Show a success message

@@ -24,7 +24,7 @@ class _CheckboxGroupState extends State<CheckboxGroup> {
       alignment: Alignment.bottomLeft,
       margin: EdgeInsets.only(bottom: 46.v),
       child: Wrap(
-      spacing: 15.0,
+      spacing: 20.0,
       runSpacing: 15.0,
       children: List.generate(widget.options.length, (index) {
         final option = widget.options[index];

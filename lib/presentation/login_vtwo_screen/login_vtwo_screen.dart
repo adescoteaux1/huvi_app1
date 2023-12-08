@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get_it/get_it.dart';
 import 'package:huvi_app1/core/app_export.dart';
+import 'package:huvi_app1/core/utils/constants.dart';
 import 'package:huvi_app1/main.dart';
 import 'package:huvi_app1/presentation/uv_status_vone_container_screen/uv_status_vone_container_screen.dart';
 import 'package:huvi_app1/presentation/uv_status_vone_page/uv_status_vone_page.dart';
@@ -41,46 +42,14 @@ class _LoginVtwoScreenState extends State<LoginVtwoScreen> {
     if (userId == null) {
       throw UnimplementedError();
     }
- 
+    print(userId);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) =>  UvStatusVoneContainerScreen()),
+    );
     return userId;
   }
 
-  Future<AuthResponse> _googleSignIn() async {
-    /// TODO: update the Web client ID with your own.
-    ///
-    /// Web Client ID that you registered with Google Cloud.
-    const webClientId = 'my-web.apps.googleusercontent.com';
-
-    /// TODO: update the iOS client ID with your own.
-    ///
-    /// iOS Client ID that you registered with Google Cloud.
-    const iosClientId = 'my-ios.apps.googleusercontent.com';
-
-    // Google sign in on Android will work without providing the Android
-    // Client ID registered on Google Cloud.
-
-    final GoogleSignIn googleSignIn = GoogleSignIn(
-      clientId: iosClientId,
-      serverClientId: webClientId,
-    );
-    final googleUser = await googleSignIn.signIn();
-    final googleAuth = await googleUser!.authentication;
-    final accessToken = googleAuth.accessToken;
-    final idToken = googleAuth.idToken;
-
-    if (accessToken == null) {
-      throw 'No Access Token found.';
-    }
-    if (idToken == null) {
-      throw 'No ID Token found.';
-    }
-
-    return supabase.auth.signInWithIdToken(
-      provider: Provider.google,
-      idToken: idToken,
-      accessToken: accessToken,
-    );
-  }
 
 /*
   Future<void> login() async {
@@ -264,11 +233,9 @@ class _LoginVtwoScreenState extends State<LoginVtwoScreen> {
                 CustomElevatedButton(
                   onTap: () {
                           // Replace 'YourRouteNameHere' with the actual route name to navigate to the login screen.
-                          signInEmailAndPassword(emailController.text, passwordController.text);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) =>  UvStatusVoneContainerScreen()),
-                          );
+                          userID = signInEmailAndPassword(emailController.text, passwordController.text);
+                          
+                          print(userID);
                         },
                   text: "Login",
                   buttonStyle: CustomButtonStyles.fillYellow,
@@ -314,7 +281,7 @@ class _LoginVtwoScreenState extends State<LoginVtwoScreen> {
                     ),
                   ),
                   onTap: () => {
-                    _googleSignIn(),
+                    
                   },
                   buttonStyle: CustomButtonStyles.fillGray,
                   buttonTextStyle: CustomTextStyles.titleSmallYellow700,
